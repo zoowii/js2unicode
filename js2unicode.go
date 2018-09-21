@@ -186,10 +186,7 @@ func WriteResultFilesToOutputDir(contents []string, sourceFiles []string, source
 	if len(contents) != len(sourceFiles) {
 		return errors.New("source files and contents count not match")
 	}
-	var _, outputDirStatErr = os.Stat(outputDir)
-	if os.IsNotExist(outputDirStatErr) {
-		os.MkdirAll(outputDir, os.ModePerm)
-	}
+	
 	for i := range(contents) {
 		content := contents[i]
 		sourceFile := sourceFiles[i]
@@ -198,7 +195,13 @@ func WriteResultFilesToOutputDir(contents []string, sourceFiles []string, source
 			return err
 		}
 		outputFile := path.Join(outputDir, relativePath)
+		outputFileDir := filepath.Dir(outputFile)
+		var _, outputFileDirStatErr = os.Stat(outputFileDir)
+		if os.IsNotExist(outputFileDirStatErr) {
+			os.MkdirAll(outputFileDir, os.ModePerm)
+		}
 		ioutil.WriteFile(outputFile, []byte(content), 0644)
+		fmt.Printf("write file %s done\n", outputFile)
 	}
 	return nil
 }
