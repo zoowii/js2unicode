@@ -104,7 +104,7 @@ func ExcludeIgnoredFiles(files []string, dirAbsPath string, outputDir string) ([
 		if strings.HasPrefix(relativePath, ".") || strings.HasPrefix(relativePath, string(filepath.Separator) + ".") {
 			continue
 		}
-		if strings.HasPrefix(file, outputDir) {
+		if dirAbsPath != outputDir && strings.HasPrefix(outputDir, dirAbsPath) && strings.HasPrefix(file, outputDir) {
 			continue
 		}
 		result = append(result, file)
